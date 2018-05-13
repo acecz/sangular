@@ -1,0 +1,20 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>
+    this is component {{ title }}!
+    <br>
+  </h1>
+  <form #formRef='ngForm' (ngSubmit)="onSubmit(formRef.value)">
+    <fieldset ngModelGroup='login'>
+      Username:
+      <input [(ngModel)]='username' name="username" #usernameRef="ngModel" required minlength="3" type="text">
+      <div *ngIf="usernameRef.errors?.required">this is required</div>
+      <div *ngIf="usernameRef.errors?.minlength">should be at least 3 charactors</div>
+      <br> Password:
+      <input [(ngModel)]='password' name="password" #passwordRef="ngModel" required type="password">
+      <div *ngIf="passwordRef.errors?.required">this is required</div>
+    </fieldset>
+    <br>
+    <button type="submit">Login</button>
+  </form>
+</div>
