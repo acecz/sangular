@@ -10,6 +10,7 @@ import { LoginComponent } from './login/login.component';
 import { AuthService } from './core/auth.service';
 import { routing } from './app.routes';
 import { TodoComponent } from './todo/todo.component';
+import { MessagesComponent } from './messages/messages.component';
 
 
 
@@ -17,7 +18,8 @@ import { TodoComponent } from './todo/todo.component';
   declarations: [
     AppComponent,
     LoginComponent,
-    TodoComponent
+    TodoComponent,
+    MessagesComponent
   ],
   imports: [
     BrowserModule,
