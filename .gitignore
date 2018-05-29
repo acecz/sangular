@@ -31,6 +31,7 @@ node_modules
 
 Thumbs.db
 
+!**/.babelrc
 !./.gitignore
 !src/**
 
