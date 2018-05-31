@@ -49,7 +49,7 @@ npm init
 **3. 安装两个babel插件**
 
 ```shell
-npm i -D babel-preset-es2015 babel-preset-stage-0
+npm i -D babel-preset-env babel-preset-stage-0
 ```
 
 -D 是 --save-dev的简写
@@ -60,7 +60,7 @@ npm i -D babel-preset-es2015 babel-preset-stage-0
 
 ```json
 {
-    "presets": ["es2015", "stage-0"]
+    "presets": ["env", "stage-0"]
 }
 ```
 
