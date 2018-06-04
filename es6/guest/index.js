@@ -77,3 +77,14 @@ function passthru(literals) {
 }
 
 console.log(msg);
+
+
+let hypotVal = Math.hypot(3, 4);
+console.log(hypotVal);
+
+
+function foothis() {
+    setTimeout(() => console.log("id", this.foothisid), 100);
+}
+var foothisid = 21;
+foothis.call({ foothisid: 42 });
