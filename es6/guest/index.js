@@ -88,3 +88,15 @@ function foothis() {
 }
 var foothisid = 21;
 foothis.call({ foothisid: 42 });
+
+
+function TestThisTimer() {
+    this.s1 = 0;
+    this.s2 = 0;
+    //setInterval(() => this.s1++, 1000);
+    console.log('this-out: ', this.s2)
+    //setInterval(function () { this.s2++; console.log('this-inner: ', this.s2); }, 1000);
+}
+//var testThisTimer = new TestThisTimer();
+//setTimeout(() => console.log('s1: ', testThisTimer.s1), 3100);
+//setTimeout(() => console.log('s2: ', testThisTimer.s2), 3100);
