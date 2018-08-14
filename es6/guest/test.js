@@ -196,4 +196,74 @@ const forof_object_generator_1 = function () {
     }
 }
 
-forof_object_generator_1();
+const generator_next_test_1 = function () {
+    function* f() {
+        for (let i = 0; true; i++) {
+            console.log('p-1');
+            let reset = yield i;
+            console.log('p-2');
+            if (reset) { i = -1; console.log('p-3'); }
+            console.log('p-4');
+        }
+    }
+
+    let g = f();
+    console.log(g.next());
+    console.log(g.next());
+    console.log(g.next());
+    console.log(g.next(true));
+}
+
+
+const generator_next_test_2 = function () {
+    function* foo(x) {
+        let y = 2 * (yield (x + 1));
+        console.log('y=' + y);
+        let z = yield (y / 3);
+        return (x + y + z);
+    }
+
+    let a = foo(5);
+    console.log(a.next());
+    console.log(a.next());
+    console.log(a.next());
+
+    let b = foo(5);
+    console.log(b.next());
+    console.log(b.next(12));
+    console.log(b.next(13));
+}
+
+const generator_forof_test_3 = function () {
+    function* foo() {
+        yield 1;
+        yield 2;
+        return 3; // { value: 3, done: true }
+    }
+    let f1 = foo();
+    for (let v of f1) {
+        console.log(v);
+    }
+    let f2 = foo();
+    for (let i = 0; i < 5; i++) {
+        console.log(f2.next());
+    }
+}
+
+const generator_forof_fibonacci_3 = function () {
+    function* fibonacci() {
+        let [prev, curr] = [0, 1];
+        for (; ;) {
+            yield curr;
+            [prev, curr] = [curr, prev + curr];
+        }
+    }
+
+    for (let n of fibonacci()) {
+        if (n > 1000) break;
+        console.log(n);
+    }
+}
+
+
+generator_forof_fibonacci_3();
