@@ -100,3 +100,4 @@ function TestThisTimer() {
 //var testThisTimer = new TestThisTimer();
 //setTimeout(() => console.log('s1: ', testThisTimer.s1), 3100);
 //setTimeout(() => console.log('s2: ', testThisTimer.s2), 3100);
+
