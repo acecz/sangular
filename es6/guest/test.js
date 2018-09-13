@@ -265,5 +265,43 @@ const generator_forof_fibonacci_3 = function () {
     }
 }
 
+const generator_prototype_throw_test = function () {
+    let g = function* () {
+        try {
+            yield;
+        } catch (e) {
+            console.log('内部捕获1', e);
+        }
+    };
 
-generator_forof_fibonacci_3();
+    let i = g();
+    i.next();
+
+    try {
+        i.throw('a');
+        i.throw('b');
+    } catch (e) {
+        console.log('外部捕获', e);
+    }
+}
+
+const generator_aync_test_01 = function () {
+    let fetch = require('node-fetch');
+
+    function* gen() {
+        var url = 'https://api.github.com/users/github';
+        var result = yield fetch(url);
+        console.log(result.bio);
+    }
+    let g = gen();
+    let result = g.next();
+
+    result.value.then(function (data) {
+        return data.json();
+    }).then(function (data) {
+        console.log(data);
+        g.next(data);
+    });
+}
+
+generator_aync_test_01();
