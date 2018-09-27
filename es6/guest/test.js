@@ -304,4 +304,91 @@ const generator_aync_test_01 = function () {
     });
 }
 
-generator_aync_test_01();
+async function* createAsyncIterable(syncIterable) {
+    for (const elem of syncIterable) {
+        yield elem;
+    }
+}
+
+const async_func_asyncIterator_01 = function () {
+    async function f() {
+        const asyncIterable = createAsyncIterable(['a', 'b']);
+        const asyncIterator = asyncIterable[Symbol.asyncIterator]();
+        console.log(await asyncIterator.next());
+        // { value: 'a', done: false }
+        console.log(await asyncIterator.next());
+        // { value: 'b', done: false }
+        console.log(await asyncIterator.next());
+        // { value: undefined, done: true }
+    }
+    f().then(resolve => console.log(resolve))
+}
+
+const async_func_asyncIterator_02 = function () {
+    let fetch = require('node-fetch');
+    // Note the * after "function"
+    async function* asyncRandomNumbers() {
+        // This is a web service that returns a random number
+        const url = 'https://www.random.org/decimal-fractions/?num=1&dec=10&col=1&format=plain&rnd=new';
+        while (true) {
+            const response = await fetch(url);
+            const text = await response.text();
+            yield Number(text);
+        }
+    }
+    async function example() {
+        for await (const number of asyncRandomNumbers()) {
+            console.log(number);
+            if (number > 0.95) break;
+        }
+    }
+    example().then(r => { });
+}
+
+const async_func_asyncIterator_03 = function () {
+    async function inner_func() {
+        const asyncIterable = createAsyncIterable(['a', 'b']);
+        const asyncIterator = asyncIterable[Symbol.asyncIterator]();
+        const [{ value: v1 }, { value: v2 }] = await Promise.all([
+            asyncIterator.next(), asyncIterator.next()
+        ]);
+        console.log(v1, v2);
+    }
+    inner_func().then(r => { });
+}
+
+const async_func_asyncIterator_04 = function () {
+    async function f() {
+        for await (const x of createAsyncIterable(['a', 'b'])) {
+            console.log(x);
+        }
+    }
+    f().then(r => { });
+}
+
+const async_func_yield_01 = function () {
+    async function* gen1() {
+        yield 'a';
+        yield 'b';
+        return 2;
+    }
+
+    async function* gen2() {
+        // result 最终会等于 2
+        const result = yield* gen1();
+    }
+    // let g2 = gen2();
+    // g2.next().then(r => console.log(r));
+    // g2.next().then(r => console.log(r));
+    // g2.next().then(r => console.log(r));
+
+    (async function () {
+        for await (const x of gen2()) {
+            console.log(x);
+        }
+    })();
+}
+
+async_func_yield_01();
+
+
