@@ -389,6 +389,178 @@ const async_func_yield_01 = function () {
     })();
 }
 
-async_func_yield_01();
+
+const class_intro_01 = function () {
+    class Point {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        toString() {
+            return '(' + this.x + ', ' + this.y + ')';
+        }
+    }
+
+    console.log(typeof Point)
+    console.log(Point === Point.prototype.constructor)
+}
+
+const class_express_01 = function () {
+    const MyClass = class Me {
+        getClassName() {
+            return Me.name;
+        }
+    };
+    let inst = new MyClass();
+    console.log(inst.getClassName());
+    console.log(Me.name);
+}
+
+const class_express_02 = function () {
+    let person = new class {
+        constructor(name) {
+            this.name = name;
+        }
+        sayName() {
+            console.log(this.name);
+        }
+    }('张三');
+    person.sayName();
+}
+
+const class_this_01 = function () {
+    class Logger {
+        printName(name = 'there') {
+            this.print(`Hello ${name}`);
+        }
+        print(text) {
+            console.log(text);
+        }
+    }
+    const logger = new Logger();
+    const { printName } = logger;
+    printName();
+}
+
+const class_this_02 = function () {
+    class Logger {
+        constructor() {
+            this.printName = (name = 'there') => {
+                this.print(`Hello ${name}`);
+            };
+        }
+        print(text) {
+            console.log(text);
+        }
+    }
+    const logger = new Logger();
+    const { printName } = logger;
+    printName();
+    printName('ZhangSan');
+}
+
+
+const class_this_03 = function () {
+    class Logger {
+        constructor() {
+            this.printName = this.printName.bind(this);
+        }
+        printName(name = 'there') {
+            this.print(`Hello ${name}`);
+        }
+        print(text) {
+            console.log(text);
+        }
+    }
+    const logger = new Logger();
+    const { printName } = logger;
+    printName();
+    printName('WangWu');
+}
+const class_getset_01 = function () {
+    class MyClass {
+        prop;
+        constructor() {
+            this.prop = 0
+        }
+        get prop() {
+            console.log('getter: ' + Object.getPrototypeOf(this)['prop']);
+            return 'getter';
+        }
+        set prop(value) {
+            console.log('setter: ' + value);
+        }
+    }
+
+    let inst = new MyClass();
+    inst.prop = 123;
+    // setter: 123
+    console.log('get: ' + inst.prop);
+}
+
+const class_extends_01 = function () {
+    class A {
+        constructor() {
+            this.x = 1;
+        }
+        static print() {
+            console.log(this.x);
+        }
+    }
+    class B extends A {
+        constructor() {
+            super();
+            this.x = 2;
+        }
+        static m() {
+            super.print();
+        }
+    }
+    // B.x = 3;
+    B.m() // 3
+}
+
+const class_extends_02 = function () {
+    function MyArray() {
+        Array.apply(this, arguments);
+    }
+
+    MyArray.prototype = Object.create(Array.prototype, {
+        constructor: {
+            value: MyArray,
+            writable: true,
+            configurable: true,
+            enumerable: true
+        }
+    });
+    var colors = new MyArray();
+    colors[0] = "red";
+    // 0
+    console.log(colors.length)
+
+    colors.length = 0;
+    // "red"
+    console.log(colors[0])
+}
+
+const class_extends_03 = function () {
+    class MyArray extends Array {
+        constructor(...args) {
+          super(...args);
+        }
+      }
+      
+    var colors = new MyArray();
+    colors[0] = "red";
+    // 0
+    console.log(colors.length)
+
+    colors.length = 0;
+    // "red"
+    console.log(colors[0])
+}
+
+class_extends_03();
 
 
