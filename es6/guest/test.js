@@ -547,10 +547,10 @@ const class_extends_02 = function () {
 const class_extends_03 = function () {
     class MyArray extends Array {
         constructor(...args) {
-          super(...args);
+            super(...args);
         }
-      }
-      
+    }
+
     var colors = new MyArray();
     colors[0] = "red";
     // 0
@@ -561,6 +561,48 @@ const class_extends_03 = function () {
     console.log(colors[0])
 }
 
-class_extends_03();
+
+const decorator_test_01 = function () {
+    function testable(target) {
+        target.isTestable = true;
+    }
+
+    @testable
+    class MyTestableClass {
+        // ...
+    }
+    MyTestableClass = testable(MyTestableClass)||MyTestableClass;
+    console.log(MyTestableClass.isTestable)
+}
+
+const decorator_test_02 = function () {
+    function testable(target) {
+        target.isTestable = true;
+    }
+    class MyTestableClass {
+        // ...
+    }
+    MyTestableClass = testable(MyTestableClass)||MyTestableClass;
+    console.log(MyTestableClass.isTestable)
+}
+
+const decorator_test_03 = function () {
+    function testable(isTestable) {
+        return function(target) {
+          target.isTestable = isTestable;
+        }
+      }
+      
+      @testable(true)
+      class MyTestableClass {}
+      MyTestableClass.isTestable // true
+      
+      @testable(false)
+      class MyClass {}
+      MyClass.isTestable // false
+    console.log(MyClass.isTestable)
+}
+
+decorator_test_03();
 
 
