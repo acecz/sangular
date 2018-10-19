@@ -571,7 +571,7 @@ const decorator_test_01 = function () {
     class MyTestableClass {
         // ...
     }
-    MyTestableClass = testable(MyTestableClass)||MyTestableClass;
+    MyTestableClass = testable(MyTestableClass) || MyTestableClass;
     console.log(MyTestableClass.isTestable)
 }
 
@@ -582,27 +582,111 @@ const decorator_test_02 = function () {
     class MyTestableClass {
         // ...
     }
-    MyTestableClass = testable(MyTestableClass)||MyTestableClass;
+    MyTestableClass = testable(MyTestableClass) || MyTestableClass;
     console.log(MyTestableClass.isTestable)
 }
 
 const decorator_test_03 = function () {
     function testable(isTestable) {
-        return function(target) {
-          target.isTestable = isTestable;
+        return function (target) {
+            target.isTestable = isTestable;
         }
-      }
-      
-      @testable(true)
-      class MyTestableClass {}
-      MyTestableClass.isTestable // true
-      
-      @testable(false)
-      class MyClass {}
-      MyClass.isTestable // false
+    }
+
+    @testable(true)
+    class MyTestableClass { }
+    console.log(MyTestableClass.isTestable)
+    @testable(false)
+    class MyClass { }
     console.log(MyClass.isTestable)
 }
 
-decorator_test_03();
+const decorator_method_test_03 = function () {
+    class Person {
+        //first = "f";
+        //last = "l";
+        @readonly
+        name() { return `${this.first} ${this.last}` }
+    }
+    function readonly(target, name, descriptor) {
+        // descriptor对象原来的值如下
+        // {
+        //   value: specifiedFunction,
+        //   enumerable: false,
+        //   configurable: true,
+        //   writable: true
+        // };
+        descriptor.writable = false;
+        return descriptor;
+    }
+
+    //readonly(Person.prototype, 'name', descriptor);
+    // 类似于
+    //Object.defineProperty(Person.prototype, 'name', descriptor);
+
+    let p = new Person();
+    p.first = "aa";
+    p.last = "bb";
+    console.log(p.name());
+
+}
+
+const decorator_method_test_04 = function () {
+    class Math {
+        @log
+        add(a, b) {
+            return a + b;
+        }
+    }
+    function log(target, name, descriptor) {
+        var oldValue = descriptor.value;
+        descriptor.value = function () {
+            console.log(`Calling ${name} with`, arguments);
+            return oldValue.apply(this, arguments);
+        };
+        return descriptor;
+    }
+    const math = new Math();
+    // passed parameters should get logged now
+    math.add(2, 4);
+}
+
+const decorator_method_test_05 = function () {
+    const postal = require("postal/lib/postal.lodash");
+    function publish(topic, channel) {
+        const channelName = channel || '/';
+        const msgChannel = postal.channel(channelName);
+        msgChannel.subscribe(topic, v => {
+            console.log('频道: ', channelName);
+            console.log('事件: ', topic);
+            console.log('数据: ', v);
+        });
+        return function (target, name, descriptor) {
+            const fn = descriptor.value;
+            descriptor.value = function () {
+                let value = fn.apply(this, arguments);
+                msgChannel.publish(topic, value);
+            };
+        };
+    }
+
+    class FooComponent {
+        @publish('foo.some.message', 'component')
+        someMethod() {
+            return { my: 'data' };
+        }
+        @publish('foo.some.other')
+        anotherMethod() {
+            // ...
+        }
+    }
+
+    let foo = new FooComponent();
+
+    foo.someMethod();
+    foo.anotherMethod();
+}
+
+decorator_method_test_05();
 
 
