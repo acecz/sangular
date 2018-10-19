@@ -34,5 +34,7 @@ Thumbs.db
 !**/.babelrc
 !./.gitignore
 !src/**
+!**/tsconfig.json
+
 
 
