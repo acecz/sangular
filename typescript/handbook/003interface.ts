@@ -153,6 +153,8 @@ let testClass3 = function () {
     }
 
     let digital = createClock(DigitalClock, 12, 17);
+    digital.tick();
     let analog = createClock(AnalogClock, 7, 32);
+    analog.tick();
 }
-testClass1();
+testClass3();
